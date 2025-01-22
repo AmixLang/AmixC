@@ -1,0 +1,10 @@
+[versions]
+kotlin = "2.1.0"
+lib-version = "1.0.0"
+robok-amix = "1.0.1"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+robok-amix = { group = "com.github.Robok-Engine", name = "Robok-Amix", version.ref = "robok-amix" }
