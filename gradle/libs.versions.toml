@@ -1,0 +1,12 @@
+[versions]
+kotlin = "2.1.0"
+lib-version = "1.0.0"
+robok-amix = "1.0.1"
+commons-cli = "1.4"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+robok-amix = { group = "com.github.Robok-Engine", name = "Robok-Amix", version.ref = "robok-amix" }
+commons-cli = { group = "commons-cli", name = "commons-cli", version.ref = "commons-cli" }
