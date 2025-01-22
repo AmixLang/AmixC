@@ -1,0 +1,10 @@
+[versions]
+kotlin = "2.1.0"
+lib-version = "1.0.0"
+amix = "1.0.0"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+amix = { group = "com.github.AmixLang", name = "Amix", version.ref = "amix" }
