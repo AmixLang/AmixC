@@ -1,8 +1,8 @@
 package org.robok.amixc
 
-import org.robok.amix.Amix
 import java.io.File
 import java.io.IOException
+import org.robok.amix.Amix
 
 fun main(args: Array<String>) {
   val useVerticalRoot = parseUseVerticalRoot(args)
@@ -24,16 +24,13 @@ fun compile(files: List<File>, useVerticalRoot: Boolean) {
       val xmlFileName = "${amixFileName}.xml"
       val xmlFile = File(amixFile.parent, xmlFileName)
 
-      val amix = Amix.Builder()
-        .setUseVerticalRoot(useVerticalRoot)
-        .setCode(amixFileCode)
-        .setOnGenerateCode { code, _ ->
-          xmlFile.writeText(code)
-        }
-        .setOnError { error ->
-          println("Error compiling ${amixFile.name}: $error")
-        }
-        .create()
+      val amix =
+        Amix.Builder()
+          .setUseVerticalRoot(useVerticalRoot)
+          .setCode(amixFileCode)
+          .setOnGenerateCode { code, _ -> xmlFile.writeText(code) }
+          .setOnError { error -> println("Error compiling ${amixFile.name}: $error") }
+          .create()
 
       amix.compile()
       println("File ${amixFile.name} compiled successfully to ${xmlFile.absolutePath}")
@@ -49,5 +46,6 @@ fun List<String>.toFileList(): List<File> {
 
 fun parseUseVerticalRoot(args: Array<String>): Boolean {
   val index = args.indexOf("-verticalroot")
-  return if (index != -1 && index + 1 < args.size) args[index + 1].toBooleanStrictOrNull() ?: false else false
+  return if (index != -1 && index + 1 < args.size) args[index + 1].toBooleanStrictOrNull() ?: false
+  else false
 }
