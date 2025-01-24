@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.0"
 lib-version = "1.0.0"
-robok-amix = "1.0.1"
+robok-amix = "1.0.3"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

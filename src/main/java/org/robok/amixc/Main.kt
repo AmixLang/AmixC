@@ -1,20 +1,22 @@
 package org.robok.amixc
 
 import org.robok.amix.Amix
-import org.robok.amix.config.Config
 import java.io.File
 import java.io.IOException
 
 fun main(args: Array<String>) {
-  if (args.isEmpty()) {
-    println("Please provide one or more file paths as arguments.")
+  val useVerticalRoot = parseUseVerticalRoot(args)
+  val filePaths = args.dropWhile { it != "-verticalroot" }.drop(2)
+
+  if (filePaths.isEmpty()) {
+    println("Error: No file paths provided.")
     return
   }
 
-  compile(args.toList().toFileList())
+  compile(filePaths.toFileList(), useVerticalRoot)
 }
 
-fun compile(files: List<File>) {
+fun compile(files: List<File>, useVerticalRoot: Boolean) {
   files.forEach { amixFile ->
     try {
       val amixFileName = amixFile.nameWithoutExtension
@@ -23,19 +25,18 @@ fun compile(files: List<File>) {
       val xmlFile = File(amixFile.parent, xmlFileName)
 
       val amix = Amix.Builder()
+        .setUseVerticalRoot(useVerticalRoot)
         .setCode(amixFileCode)
-        .setOnGenerateCode(object : Amix.OnGenerateCode {
-          override fun call(generatedCode: String, config: Config) {
-            xmlFile.writeText(generatedCode)
-          }
-        })
-        .setOnError(object : Amix.OnError {
-          override fun call(error: String) {
-            println("Error compiling ${amixFile.name}: $error")
-          }
-        })
+        .setOnGenerateCode { code, _ ->
+          xmlFile.writeText(code)
+        }
+        .setOnError { error ->
+          println("Error compiling ${amixFile.name}: $error")
+        }
         .create()
-        amix.compile()
+
+      amix.compile()
+      println("File ${amixFile.name} compiled successfully to ${xmlFile.absolutePath}")
     } catch (e: IOException) {
       println("Error processing file ${amixFile.name}: ${e.message}")
     }
@@ -43,9 +44,10 @@ fun compile(files: List<File>) {
 }
 
 fun List<String>.toFileList(): List<File> {
-  val list = mutableListOf<File>()
-  this.forEach {
-    list.add(File(it))
-  }
-  return list
+  return this.map { File(it) }
+}
+
+fun parseUseVerticalRoot(args: Array<String>): Boolean {
+  val index = args.indexOf("-verticalroot")
+  return if (index != -1 && index + 1 < args.size) args[index + 1].toBooleanStrictOrNull() ?: false else false
 }
